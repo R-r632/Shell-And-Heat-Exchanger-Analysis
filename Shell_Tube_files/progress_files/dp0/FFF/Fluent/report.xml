@@ -1,0 +1,304 @@
+<FluentXMLReport>
+<version>
+Fluent
+Version: 3d, dp, pbns, rke (3d, double precision, pressure-based, realizable k-epsilon)
+Release: 23.1.0
+Title: 
+</version>
+
+<Models>
+
+Models
+------
+
+   Model                        Settings                                
+   ------------------------------------------------------------------
+   Space                        3D                                      
+   Time                         Steady                                  
+   Viscous                      Realizable k-epsilon turbulence model   
+   Wall Treatment               Scalable Wall Function                  
+   Heat Transfer                Enabled                                 
+   Solidification and Melting   Disabled                                
+   Radiation                    None                                    
+   Species                      Disabled                                
+   Coupled Dispersed Phase      Disabled                                
+   NOx Pollutants               Disabled                                
+   SOx Pollutants               Disabled                                
+   Soot                         Disabled                                
+   Mercury Pollutants           Disabled                                
+   Structure                    Disabled                                
+   Acoustics                    Disabled                                
+   Eulerian Wall Film           Disabled                                
+   Potential/Electrochemistry   Disabled                                
+   Multiphase                   Disabled                                
+
+</Models>
+
+<MaterialProperties>
+Material Properties
+-------------------
+
+   Material: copper (solid)
+
+      Property               Units      Method     Value(s)   
+      -----------------------------------------------------
+      Density                kg/m^3     constant   8978       
+      Cp (Specific Heat)     J/(kg K)   constant   381        
+      Thermal Conductivity   W/(m K)    constant   387.6      
+
+   Material: water-liquid (fluid)
+
+      Property               Units      Method     Value(s)   
+      -----------------------------------------------------
+      Density                kg/m^3     constant   998.2      
+      Cp (Specific Heat)     J/(kg K)   constant   4182       
+      Thermal Conductivity   W/(m K)    constant   0.6        
+      Viscosity              kg/(m s)   constant   0.001003   
+      Molecular Weight       kg/kmol    constant   18.0152    
+
+   Material: air (fluid)
+
+      Property               Units      Method     Value(s)     
+      -------------------------------------------------------
+      Density                kg/m^3     constant   1.225        
+      Cp (Specific Heat)     J/(kg K)   constant   1006.43      
+      Thermal Conductivity   W/(m K)    constant   0.0242       
+      Viscosity              kg/(m s)   constant   1.7894e-05   
+      Molecular Weight       kg/kmol    constant   28.966       
+
+   Material: aluminum (solid)
+
+      Property               Units      Method     Value(s)   
+      -----------------------------------------------------
+      Density                kg/m^3     constant   2719       
+      Cp (Specific Heat)     J/(kg K)   constant   871        
+      Thermal Conductivity   W/(m K)    constant   202.4      
+
+</MaterialProperties>
+
+<CellZoneConditions>
+Cell Zone Conditions
+--------------------
+
+   Zones
+
+      name                 id   type    
+      -------------------------------
+      shell_wall           11   solid   
+      tube_wall            12   solid   
+      shell_fluid_domain   13   fluid   
+      tube_fluid_domain    14   fluid   
+
+   Setup Conditions
+
+      shell_wall
+
+         Condition       Value   
+         ---------------------
+         Frame Motion?   no      
+
+      tube_wall
+
+         Condition       Value   
+         ---------------------
+         Frame Motion?   no      
+
+      shell_fluid_domain
+
+         Condition       Value   
+         ---------------------
+         Frame Motion?   no      
+
+      tube_fluid_domain
+
+         Condition       Value   
+         ---------------------
+         Frame Motion?   no      
+
+</CellZoneConditions>
+
+<BoundaryConditions>
+Boundary Conditions
+-------------------
+
+   Zones
+
+      name                                        id   type              
+      ----------------------------------------------------------------
+      wall-shell_fluid_domain-tube_wall           2    wall              
+      wall-shell_fluid_domain-shell_wall          3    wall              
+      wall-tube_fluid_domain-tube_wall            4    wall              
+      shell_wall.1                                15   wall              
+      tube_wall.1                                 16   wall              
+      hot_inlet                                   17   velocity-inlet    
+      hot_outlet                                  18   pressure-outlet   
+      cold_inlet                                  19   velocity-inlet    
+      cold_outlet                                 20   pressure-outlet   
+      wall-tube_fluid_domain-tube_wall-shadow     10   wall              
+      wall-shell_fluid_domain-shell_wall-shadow   21   wall              
+      wall-shell_fluid_domain-tube_wall-shadow    22   wall              
+
+   Setup Conditions
+
+      wall-shell_fluid_domain-tube_wall
+
+         Condition         Value      
+         --------------------------
+         Material Name     aluminum   
+         Thermal BC Type   Coupled    
+
+      wall-shell_fluid_domain-shell_wall
+
+         Condition         Value      
+         --------------------------
+         Material Name     aluminum   
+         Thermal BC Type   Coupled    
+
+      wall-tube_fluid_domain-tube_wall
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              aluminum          
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      shell_wall.1
+
+         Condition         Value       
+         ---------------------------
+         Material Name     aluminum    
+         Thermal BC Type   Heat Flux   
+
+      tube_wall.1
+
+         Condition         Value       
+         ---------------------------
+         Material Name     aluminum    
+         Thermal BC Type   Heat Flux   
+
+      hot_inlet
+
+         Condition                                                              Value        
+         ---------------------------------------------------------------------------------
+         Velocity Magnitude [m/s]                                               1            
+         Temperature [C]                                                        90           
+         Note: Reinjected particles do not change their injection association   1763354496   
+
+      hot_outlet
+
+         Condition   Value   
+         -----------------
+
+      cold_inlet
+
+         Condition                                                              Value        
+         ---------------------------------------------------------------------------------
+         Velocity Magnitude [m/s]                                               1            
+         Temperature [C]                                                        15           
+         Note: Reinjected particles do not change their injection association   1763360096   
+
+      cold_outlet
+
+         Condition   Value   
+         -----------------
+
+      wall-tube_fluid_domain-tube_wall-shadow
+
+         Condition         Value      
+         --------------------------
+         Material Name     aluminum   
+         Thermal BC Type   Coupled    
+
+      wall-shell_fluid_domain-shell_wall-shadow
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              aluminum          
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-shell_fluid_domain-tube_wall-shadow
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              aluminum          
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+</BoundaryConditions>
+
+<SolverSettings>
+Solver Settings
+---------------
+
+   Equations
+
+      Equation     Solved   
+      -------------------
+      Flow         yes      
+      Turbulence   yes      
+      Energy       yes      
+
+   Numerics
+
+      Numeric                         Enabled   
+      ---------------------------------------
+      Absolute Velocity Formulation   yes       
+
+   Pseudo Time Explicit Relaxation Factors
+
+      Variable                     Relaxation Factor   
+      ----------------------------------------------
+      Density                      1                   
+      Body Forces                  1                   
+      Turbulent Kinetic Energy     0.75                
+      Turbulent Dissipation Rate   0.75                
+      Turbulent Viscosity          1                   
+      Energy                       0.75                
+      Explicit Momentum            0.5                 
+      Explicit Pressure            0.5                 
+
+   Linear Solver
+
+      Variable                     Solver Type   Termination Criterion   Residual Reduction Tolerance   
+      -----------------------------------------------------------------------------------------------
+      Flow                         F-Cycle       0.1                                                    
+      Turbulent Kinetic Energy     F-Cycle       0.1                                                    
+      Turbulent Dissipation Rate   F-Cycle       0.1                                                    
+      Energy                       F-Cycle       0.1                                                    
+
+   Pressure-Velocity Coupling
+
+      Parameter                               Value     
+      -----------------------------------------------
+      Type                                    Coupled   
+      Pseudo Time Method (Global Time Step)   yes       
+
+   Discretization Scheme
+
+      Variable                     Scheme                
+      ------------------------------------------------
+      Pressure                     Second Order          
+      Momentum                     Second Order Upwind   
+      Turbulent Kinetic Energy     Second Order Upwind   
+      Turbulent Dissipation Rate   Second Order Upwind   
+      Energy                       Second Order Upwind   
+
+   Solution Limits
+
+      Quantity                         Limit    
+      ---------------------------------------
+      Minimum Absolute Pressure        1        
+      Maximum Absolute Pressure        5e+10    
+      Minimum Temperature              1        
+      Maximum Temperature              5000     
+      Minimum Turb. Kinetic Energy     1e-14    
+      Minimum Turb. Dissipation Rate   1e-20    
+      Maximum Turb. Viscosity Ratio    100000   
+
+</SolverSettings>
+
+</FluentXMLReport>
